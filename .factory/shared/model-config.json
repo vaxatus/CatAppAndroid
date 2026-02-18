@@ -1,0 +1,44 @@
+{
+  "_docs": {
+    "description": "Central model assignment for all droids. Edit this file to change model tiers.",
+    "tiers": {
+      "premium": "Best model for code generation, architecture, complex reasoning. Uses your session model.",
+      "standard": "Good model for code analysis, test generation, moderate reasoning.",
+      "economy": "Cheapest model for mechanical tasks: scanning, listing, auditing, formatting."
+    },
+    "available_models": {
+      "inherit": "Uses parent session model (recommended for coding)",
+      "claude-sonnet-4-5-20250929": "1.2x — best for complex code generation and architecture",
+      "claude-haiku-4-5-20251001": "0.4x — fast, good for analysis and scanning",
+      "gemini-3-flash-preview": "0.2x — cheapest, good for simple scanning/listing",
+      "gpt-5.1-codex": "0.5x — good coding model, cheaper than Sonnet",
+      "glm-4.6": "0.25x — Droid Core, very cheap"
+    },
+    "how_to_change": "Edit the 'model' value below for any droid, then run: python3 test-app/apply_models.py"
+  },
+  "tier_defaults": {
+    "premium": { "model": "inherit", "reasoningEffort": "high" },
+    "standard": { "model": "inherit", "reasoningEffort": null },
+    "economy": { "model": "claude-haiku-4-5-20251001", "reasoningEffort": null }
+  },
+  "droids": {
+    "project-architect":   { "tier": "premium",  "model": "inherit",                     "reasoningEffort": "high", "reason": "Architecture decisions, cross-platform sync — needs deep reasoning" },
+    "backend-api":         { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Code generation — needs full intelligence for correct, idiomatic code" },
+    "database-postgres":   { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Schema design, migration writing — needs good SQL knowledge" },
+    "devops-infra":        { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Docker/CI config generation — needs accuracy for YAML/configs" },
+    "android-dev":         { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Kotlin/Compose code generation — needs full intelligence" },
+    "ios-dev":             { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Swift/SwiftUI code generation — needs full intelligence" },
+    "web-dev":             { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "React/TypeScript code generation — needs full intelligence" },
+    "git-manager":         { "tier": "economy",   "model": "claude-haiku-4-5-20251001",   "reasoningEffort": null,   "reason": "Git audit, branch listing, commit review — mechanical checklist work" },
+    "test-master":         { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Test generation requires understanding code logic" },
+    "coverage-scanner":    { "tier": "economy",   "model": "claude-haiku-4-5-20251001",   "reasoningEffort": null,   "reason": "Runs coverage commands, parses reports — mechanical" },
+    "test-generator":      { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Generates test code — needs code intelligence" },
+    "api-tester":          { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Generates API test code — needs code intelligence" },
+    "mock-data-generator": { "tier": "economy",   "model": "claude-haiku-4-5-20251001",   "reasoningEffort": null,   "reason": "Generates fixture data — templated, low reasoning needed" },
+    "test-reviewer":       { "tier": "economy",   "model": "claude-haiku-4-5-20251001",   "reasoningEffort": null,   "reason": "Audits test quality against checklist — mechanical" },
+    "ui-test-master":      { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Orchestrates UI testing, needs to understand app structure" },
+    "web-e2e-generator":   { "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Generates Playwright tests — needs code intelligence" },
+    "mobile-e2e-generator":{ "tier": "standard",  "model": "inherit",                     "reasoningEffort": null,   "reason": "Generates Maestro flows — needs understanding of mobile UI" },
+    "visual-regression":   { "tier": "economy",   "model": "claude-haiku-4-5-20251001",   "reasoningEffort": null,   "reason": "Screenshot comparison, baseline management — mechanical" }
+  }
+}

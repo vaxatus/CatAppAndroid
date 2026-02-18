@@ -1,0 +1,18 @@
+{
+  "$schema": "https://cursor.so/schemas/cursor-config.schema.json",
+  "version": 1,
+  "project": {
+    "name": "CatApp",
+    "type": "android",
+    "sharedKnowledgeBase": ".factory/shared/"
+  },
+  "rules": {
+    "sources": [".cursor/rules/"],
+    "extends": []
+  },
+  "agents": {
+    "defaultContext": [".cursor/AGENTS.md"],
+    "androidDocs": "https://developer.android.com",
+    "kotlinDocs": "https://kotlinlang.org/docs"
+  }
+}

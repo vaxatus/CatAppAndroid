@@ -1,0 +1,16 @@
+{
+  "name": "ui-test-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node.js scripts for UI testing - screenshots, visual diffs, Playwright helpers",
+  "scripts": {
+    "screenshot": "node screenshot.js",
+    "visual-diff": "node visual-diff.js",
+    "setup": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "pixelmatch": "^5.3.0",
+    "playwright": "^1.49.0",
+    "pngjs": "^7.0.0"
+  }
+}

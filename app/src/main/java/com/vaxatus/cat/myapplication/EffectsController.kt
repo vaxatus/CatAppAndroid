@@ -1,0 +1,1 @@
+// Fix the NPE in closeDrawer() method by guarding on _binding

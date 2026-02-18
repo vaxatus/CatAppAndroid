@@ -1,0 +1,99 @@
+{
+  "naming": {
+    "api_endpoints": "kebab-case (/api/user-profiles)",
+    "json_fields": "camelCase",
+    "db_tables": "snake_case plural (users, recipe_ingredients)",
+    "db_columns": "snake_case (created_at, display_name)",
+    "kotlin_classes": "PascalCase",
+    "kotlin_properties": "camelCase",
+    "kotlin_packages": "lowercase.dotted",
+    "swift_types": "PascalCase",
+    "swift_properties": "camelCase",
+    "typescript_interfaces": "PascalCase (no I prefix)",
+    "typescript_properties": "camelCase",
+    "typescript_files": "kebab-case (user-profile.tsx)",
+    "python_classes": "PascalCase",
+    "python_variables": "snake_case",
+    "python_files": "snake_case (user_profile.py)",
+    "css_classes": "kebab-case or BEM (block__element--modifier)",
+    "env_variables": "UPPER_SNAKE_CASE"
+  },
+  "errors": {
+    "format": "RFC 7807 Problem Details (application/problem+json)",
+    "response_shape": {
+      "type": "URI reference identifying error type",
+      "title": "Human-readable summary",
+      "status": "HTTP status code",
+      "detail": "Human-readable explanation",
+      "instance": "URI of the specific occurrence",
+      "code": "Machine-readable UPPER_SNAKE_CASE error code"
+    },
+    "codes": "UPPER_SNAKE_CASE (USER_NOT_FOUND, VALIDATION_FAILED, TOKEN_EXPIRED)",
+    "http_mapping": {
+      "validation_error": 400,
+      "unauthorized": 401,
+      "forbidden": 403,
+      "not_found": 404,
+      "conflict": 409,
+      "rate_limited": 429,
+      "server_error": 500
+    }
+  },
+  "pagination": {
+    "style": "cursor-based for public lists, offset-based for admin/internal",
+    "request_params": {
+      "cursor": "string (opaque, base64-encoded)",
+      "limit": "integer (default: 20, max: 100)",
+      "offset": "integer (admin only)",
+      "sort": "string (field:asc|desc)"
+    },
+    "response_shape": {
+      "items": "array of results",
+      "nextCursor": "string | null",
+      "prevCursor": "string | null (optional)",
+      "totalCount": "integer (optional, expensive — only for admin)"
+    }
+  },
+  "auth": {
+    "method": "JWT Bearer token",
+    "header": "Authorization: Bearer <token>",
+    "token_location": "httpOnly secure cookie (web) / secure storage (mobile)",
+    "refresh_strategy": "silent refresh via /auth/refresh endpoint",
+    "token_lifetime": "15 minutes access, 7 days refresh",
+    "roles": ["admin", "editor", "viewer"]
+  },
+  "i18n": {
+    "default_locale": "en",
+    "supported_locales": ["en", "pl"],
+    "key_format": "dot.separated.lowercase (auth.login.title)",
+    "backend_rule": "return error CODES not translated messages — client translates",
+    "date_display": "localized by client using Intl/DateFormatter/DateFormat",
+    "number_display": "localized decimal separators by client"
+  },
+  "dates": {
+    "api_format": "ISO 8601 with timezone (2025-01-15T10:30:00Z)",
+    "db_storage": "TIMESTAMPTZ (always UTC in Postgres)",
+    "client_display": "converted to user's local timezone",
+    "kotlin": "java.time.Instant or ZonedDateTime",
+    "swift": "Date (Foundation) + ISO8601DateFormatter",
+    "typescript": "string in API, Date object in app, dayjs/date-fns for formatting",
+    "python": "datetime.datetime (always timezone-aware)"
+  },
+  "ids": {
+    "primary_keys": "UUIDv7 (time-sortable) preferred, bigint acceptable",
+    "api_exposure": "always UUID, never expose auto-increment IDs",
+    "format": "lowercase with hyphens (550e8400-e29b-41d4-a716-446655440000)"
+  },
+  "api_versioning": {
+    "strategy": "URL prefix (/api/v1/users)",
+    "breaking_changes": "new version (/api/v2/users), keep v1 for 6 months",
+    "additive_changes": "add to current version (new optional fields are NOT breaking)"
+  },
+  "logging": {
+    "format": "structured JSON",
+    "levels": ["error", "warn", "info", "debug"],
+    "required_fields": ["timestamp", "level", "message", "correlationId"],
+    "sensitive_fields_to_mask": ["password", "token", "secret", "creditCard", "ssn"],
+    "correlation": "X-Correlation-ID header propagated across all services"
+  }
+}

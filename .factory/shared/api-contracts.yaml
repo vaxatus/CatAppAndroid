@@ -1,0 +1,438 @@
+# Shared API Contract — OpenAPI 3.1 (simplified)
+# All platform droids read this to generate API clients, controllers, and tests.
+# Backend implements. Web/Android/iOS consume.
+
+openapi: "3.1.0"
+info:
+  title: "Multiplatform App API"
+  version: "1.0.0"
+  description: "Shared API contract for Web, Android, iOS, and Backend"
+
+servers:
+  - url: http://localhost:9000/api/v1
+    description: Local development
+  - url: https://api.example.com/api/v1
+    description: Production
+
+security:
+  - bearerAuth: []
+
+paths:
+  # --- Auth ---
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Login with credentials
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [login, password]
+              properties:
+                login: { type: string, description: "Username or email" }
+                password: { type: string, format: password }
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+                  user: { $ref: "#/components/schemas/User" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /auth/refresh:
+    post:
+      tags: [auth]
+      summary: Refresh access token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+                  refreshToken: { type: string }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Logout and invalidate tokens
+      responses:
+        "204": { description: Logged out }
+
+  # --- Users ---
+  /users:
+    get:
+      tags: [users]
+      summary: List users (admin only)
+      parameters:
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, default: 20, maximum: 100 } }
+        - { name: role, in: query, schema: { $ref: "#/components/schemas/UserRole" } }
+        - { name: search, in: query, schema: { type: string }, description: "Search by name/email" }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedUsers"
+
+  /users/{id}:
+    get:
+      tags: [users]
+      summary: Get user by ID
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /users/me:
+    get:
+      tags: [users]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # --- Products ---
+  /products:
+    get:
+      tags: [products]
+      summary: List products
+      parameters:
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, default: 20, maximum: 100 } }
+        - { name: search, in: query, schema: { type: string } }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedProducts"
+    post:
+      tags: [products]
+      summary: Create a product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProduct"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400": { $ref: "#/components/responses/ValidationError" }
+
+  /products/{id}:
+    get:
+      tags: [products]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [products]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProduct"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+    delete:
+      tags: [products]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "204": { description: Deleted }
+
+  # --- Recipes ---
+  /recipes:
+    get:
+      tags: [recipes]
+      summary: List recipes
+      parameters:
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, default: 20, maximum: 100 } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: difficulty, in: query, schema: { $ref: "#/components/schemas/Difficulty" } }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedRecipes"
+    post:
+      tags: [recipes]
+      summary: Create a recipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecipe"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        "400": { $ref: "#/components/responses/ValidationError" }
+
+  /recipes/{id}:
+    get:
+      tags: [recipes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [recipes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRecipe"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipe"
+    delete:
+      tags: [recipes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "204": { description: Deleted }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserRole:
+      type: string
+      enum: [admin, editor, viewer]
+
+    Difficulty:
+      type: string
+      enum: [easy, medium, hard]
+
+    Unit:
+      type: string
+      enum: [g, ml, piece, tbsp, tsp, cup]
+
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        username: { type: string }
+        displayName: { type: string }
+        role: { $ref: "#/components/schemas/UserRole" }
+        avatarUrl: { type: string, format: uri, nullable: true }
+        isActive: { type: boolean }
+        lastLoginAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    Product:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        weight: { type: number }
+        calories: { type: number }
+        protein: { type: number }
+        fat: { type: number }
+        carbs: { type: number }
+        fiber: { type: number }
+        createdAt: { type: string, format: date-time }
+
+    CreateProduct:
+      type: object
+      required: [name, weight, calories, protein, fat, carbs]
+      properties:
+        name: { type: string, maxLength: 200 }
+        description: { type: string, maxLength: 1000 }
+        weight: { type: number, minimum: 0 }
+        calories: { type: number, minimum: 0 }
+        protein: { type: number, minimum: 0 }
+        fat: { type: number, minimum: 0 }
+        carbs: { type: number, minimum: 0 }
+        fiber: { type: number, minimum: 0 }
+
+    UpdateProduct:
+      type: object
+      properties:
+        name: { type: string, maxLength: 200 }
+        description: { type: string, maxLength: 1000 }
+        weight: { type: number, minimum: 0 }
+        calories: { type: number, minimum: 0 }
+        protein: { type: number, minimum: 0 }
+        fat: { type: number, minimum: 0 }
+        carbs: { type: number, minimum: 0 }
+        fiber: { type: number, minimum: 0 }
+
+    Recipe:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        preparationTime: { type: integer }
+        portions: { type: integer }
+        difficulty: { $ref: "#/components/schemas/Difficulty" }
+        imageUrl: { type: string, format: uri, nullable: true }
+        ingredients:
+          type: array
+          items: { $ref: "#/components/schemas/RecipeIngredient" }
+        createdAt: { type: string, format: date-time }
+
+    CreateRecipe:
+      type: object
+      required: [name, preparationTime, portions]
+      properties:
+        name: { type: string, maxLength: 300 }
+        description: { type: string }
+        preparationTime: { type: integer, minimum: 1 }
+        portions: { type: integer, minimum: 1 }
+        difficulty: { $ref: "#/components/schemas/Difficulty" }
+        ingredients:
+          type: array
+          items:
+            type: object
+            required: [productId, amount]
+            properties:
+              productId: { type: string, format: uuid }
+              amount: { type: number, minimum: 0 }
+              unit: { $ref: "#/components/schemas/Unit" }
+
+    UpdateRecipe:
+      type: object
+      properties:
+        name: { type: string, maxLength: 300 }
+        description: { type: string }
+        preparationTime: { type: integer, minimum: 1 }
+        portions: { type: integer, minimum: 1 }
+        difficulty: { $ref: "#/components/schemas/Difficulty" }
+
+    RecipeIngredient:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        productId: { type: string, format: uuid }
+        productName: { type: string }
+        amount: { type: number }
+        unit: { $ref: "#/components/schemas/Unit" }
+
+    PaginatedUsers:
+      type: object
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/User" } }
+        nextCursor: { type: string, nullable: true }
+        totalCount: { type: integer }
+
+    PaginatedProducts:
+      type: object
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Product" } }
+        nextCursor: { type: string, nullable: true }
+
+    PaginatedRecipes:
+      type: object
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/Recipe" } }
+        nextCursor: { type: string, nullable: true }
+
+  responses:
+    ValidationError:
+      description: Validation failed
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type: { type: string }
+              title: { type: string, example: "Validation Error" }
+              status: { type: integer, example: 400 }
+              detail: { type: string }
+              code: { type: string, example: "VALIDATION_FAILED" }
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field: { type: string }
+                    message: { type: string }
+
+    Unauthorized:
+      description: Not authenticated
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type: { type: string }
+              title: { type: string, example: "Unauthorized" }
+              status: { type: integer, example: 401 }
+              code: { type: string, example: "TOKEN_EXPIRED" }
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type: { type: string }
+              title: { type: string, example: "Not Found" }
+              status: { type: integer, example: 404 }
+              code: { type: string, example: "RESOURCE_NOT_FOUND" }

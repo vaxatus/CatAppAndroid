@@ -1,0 +1,172 @@
+{
+  "users": {
+    "admin": {
+      "username": "admin",
+      "email": "admin@foodapp.dev",
+      "password": "admin123",
+      "role": "admin",
+      "quickLogin": true
+    },
+    "editor": {
+      "username": "qauser",
+      "email": "qa@foodapp.dev",
+      "password": "qa123",
+      "role": "editor",
+      "quickLogin": true
+    },
+    "viewer": {
+      "username": "viewer",
+      "email": "viewer@foodapp.dev",
+      "password": "viewer123",
+      "role": "viewer",
+      "quickLogin": false
+    },
+    "invalid": {
+      "username": "nonexistent",
+      "email": "fake@example.com",
+      "password": "wrongpass",
+      "role": null,
+      "expectError": true
+    }
+  },
+  "products": {
+    "valid_basic": {
+      "name": "Test Apple",
+      "description": "Fresh red apple",
+      "weight": "150",
+      "calories": "78",
+      "protein": "0.4",
+      "fat": "0.2",
+      "carbs": "20.7",
+      "fiber": "3.6"
+    },
+    "valid_full": {
+      "name": "Grilled Chicken Breast",
+      "description": "Lean protein source, perfect for diet meals",
+      "weight": "200",
+      "calories": "330",
+      "protein": "62",
+      "fat": "7.2",
+      "carbs": "0",
+      "fiber": "0"
+    },
+    "edge_zero_values": {
+      "name": "Distilled Water",
+      "description": "Pure water, no nutritional value",
+      "weight": "250",
+      "calories": "0",
+      "protein": "0",
+      "fat": "0",
+      "carbs": "0",
+      "fiber": "0"
+    },
+    "edge_max_values": {
+      "name": "Ultra Dense Nut Butter",
+      "description": "Maximum calorie density test",
+      "weight": "100",
+      "calories": "900",
+      "protein": "25",
+      "fat": "80",
+      "carbs": "10",
+      "fiber": "5"
+    },
+    "edge_special_chars": {
+      "name": "Müsli Crème Brûlée (50% zniżki)",
+      "description": "Special characters: ąęółżźćńś ĄĘÓŁŻŹĆŃŚ <script>alert('xss')</script>",
+      "weight": "100",
+      "calories": "350",
+      "protein": "8",
+      "fat": "15",
+      "carbs": "45",
+      "fiber": "4"
+    },
+    "invalid_empty_name": {
+      "name": "",
+      "weight": "100",
+      "calories": "100",
+      "protein": "5",
+      "fat": "5",
+      "carbs": "10",
+      "fiber": "1",
+      "expectError": true
+    },
+    "invalid_negative": {
+      "name": "Negative Test",
+      "weight": "-50",
+      "calories": "-100",
+      "protein": "-5",
+      "fat": "-5",
+      "carbs": "-10",
+      "fiber": "-1",
+      "expectError": true
+    }
+  },
+  "recipes": {
+    "valid_basic": {
+      "name": "Simple Oatmeal",
+      "description": "Quick and healthy breakfast oatmeal",
+      "time": "15",
+      "portions": "2",
+      "difficulty": "easy",
+      "mealTypes": ["breakfast"]
+    },
+    "valid_full": {
+      "name": "Chicken Stir-Fry with Vegetables",
+      "description": "A colorful and nutritious dinner with lean chicken and mixed vegetables",
+      "time": "35",
+      "portions": "4",
+      "difficulty": "medium",
+      "mealTypes": ["lunch", "dinner"],
+      "ingredients": [
+        {"product": "Chicken Breast", "amount": "400"},
+        {"product": "Bell Pepper", "amount": "200"},
+        {"product": "Broccoli", "amount": "150"}
+      ]
+    },
+    "valid_complex": {
+      "name": "Przepis Testowy z Polskimi Znakami ąęółżźćńś",
+      "description": "Opis z polskimi znakami i emoji 🍕🥗",
+      "time": "120",
+      "portions": "8",
+      "difficulty": "hard",
+      "mealTypes": ["lunch"]
+    },
+    "edge_min_time": {
+      "name": "Instant Snack",
+      "description": "Zero prep time test",
+      "time": "1",
+      "portions": "1",
+      "difficulty": "easy",
+      "mealTypes": ["snack"]
+    },
+    "edge_empty_name": {
+      "name": "",
+      "description": "No name recipe",
+      "time": "30",
+      "portions": "2",
+      "expectError": true
+    }
+  },
+  "scenarios": {
+    "smoke": {
+      "description": "Critical path: Login -> Dashboard -> Add Product -> Navigate Tabs -> Logout",
+      "steps": ["login_user", "verify_dashboard", "add_product", "navigate_all_tabs", "logout"]
+    },
+    "crud_products": {
+      "description": "Full CRUD on products: Create, Read, Update, Delete",
+      "steps": ["login_user", "navigate_products", "add_product", "verify_product_in_list", "edit_product", "delete_product"]
+    },
+    "crud_recipes": {
+      "description": "Full CRUD on recipes: Create, Read, Update, Delete",
+      "steps": ["login_user", "navigate_recipes", "add_recipe", "verify_recipe_in_list", "preview_recipe", "edit_recipe", "delete_recipe"]
+    },
+    "admin_user_management": {
+      "description": "Admin panel: View users, search, filter, edit roles",
+      "steps": ["login_admin", "verify_user_table", "search_users", "filter_by_role", "edit_role", "logout"]
+    },
+    "negative_auth": {
+      "description": "Authentication edge cases",
+      "steps": ["invalid_login", "empty_form_submit", "sql_injection_attempt", "xss_attempt"]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Super Mruczki</string>
+    <string name="nav_header_title">Super Mruczki</string>
+    <string name="nav_header_subtitle">kittens.mrau@gmail.com</string>
+    <string name="nav_header_desc">NAVIGATION HEADER</string>
+    <string name="nav_take_photo">Chwyć Kotka</string>
+    <string name="nav_gallery">Otwórz Galerie</string>
+    <string name="nav_pickcat">Mrrr</string>
+    <string name="nav_options">Opcje</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="app_opt_vibration">Ustaw Wibracje</string>
+    <string name="camera_permission_denied">"Nie można użyć kamery"</string>
+    <string name="nav_donate">Wspomoż kotka</string>
+    <string name="vibrationSwitch">Wibracje</string>
+    <string name="start_menu_options">Opcje</string>
+    <string name="start_menu_donate">Wspomóż kotki</string>
+    <string name="start_menu_start">Start</string>
+</resources>

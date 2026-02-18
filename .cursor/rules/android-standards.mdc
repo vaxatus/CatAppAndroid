@@ -1,0 +1,43 @@
+---
+description: Android/Kotlin standards — Clean Architecture, Jetpack Compose, official guidelines
+globs: app/**/*.kt
+alwaysApply: false
+---
+
+# Android & Kotlin Standards
+
+Stosuj konwencje z `.factory/shared/platform-conventions.md` (sekcja Android) oraz `.factory/droids/android-dev.md`. Poniżej skrót.
+
+## Architektura (Google + Clean Architecture)
+
+- **Warstwy**: `data/` (remote, local, repository, mapper), `domain/` (model, repository interfaces, usecase), `presentation/` (navigation, theme, components, screens, MainActivity).
+- **MVVM**: ViewModel wystawia `StateFlow<UiState>`, UI tylko obserwuje; zdarzenia w górę (callbacki).
+- **UDF**: Stan w dół (ViewModel → UI), zdarzenia w górę (UI → ViewModel).
+- **Repository** — jedyne źródło danych; UI nie sięga do API/DB bezpośrednio.
+- **UseCase** — jedna klasa na operację w `domain/usecase/`.
+
+## Jetpack Compose (gdy używany)
+
+- Composable: PascalCase (np. `ProductCard`); funkcje zwracające wartość: camelCase.
+- Stan: `remember { mutableStateOf() }` lokalnie; `StateFlow` z ViewModel dla ekranu.
+- Listy: `LazyColumn`/`LazyRow` z `key = { it.id }` — nie `Column` + `forEach`.
+- Efekty: `LaunchedEffect`, `DisposableEffect` — nie wywoływać `suspend` w kompozycji.
+- Material 3: `MaterialTheme` (colorScheme, typography, shapes), wsparcie dark mode.
+
+## Kotlin
+
+- **Async**: Coroutines + Flow (nie RxJava, nie callbacki w nowym kodzie).
+- **Stan UI**: sealed interface `UiState { data object Loading; data class Success(...); data class Error(...) }`.
+- **Null safety**: unikać `!!`; używać `?.let`, `?:`, `requireNotNull()`.
+- **DI**: Hilt — `@HiltViewModel`, `@Inject`, moduły z `@Provides`.
+- **Zależności**: Version Catalogs (`libs.versions.toml`) zamiast wpisów w build.gradle.
+
+## Sieć
+
+- Retrofit + OkHttp; interceptory do tokena; Kotlin Serialization lub Moshi.
+- DTO zgodne z `api-contracts.yaml` i `data-models.yaml`.
+
+## Testy
+
+- JUnit 5 + MockK + Turbine (Flow). Compose: `createComposeRule()`, matchery semantyczne.
+- Nazewnictwo: `methodName_condition_expectedResult()`.

@@ -1,0 +1,30 @@
+---
+description: Project conventions and shared contract — read .factory/shared before API or model code
+alwaysApply: true
+---
+
+# Project & Shared Knowledge Base
+
+## Źródło prawdy
+
+- **Konfiguracja agentów/droidów**: `.factory/` (commands, droids, shared, scripts).
+- **Kontrakt API i modele**: `.factory/shared/` — **przed** generowaniem kodu związanego z API lub modelami domenowymi przeczytaj:
+  1. `api-contracts.yaml` — endpointy, schematy request/response
+  2. `data-models.yaml` — modele domenowe i mapowania na platformy (kotlin, swift, typescript, python, sql)
+  3. `style-guide.json` — nazewnictwo, błędy (RFC 7807), paginacja, auth, daty, i18n
+  4. `platform-conventions.md` — konwencje per platforma (Android, iOS, Web, Backend, DB)
+
+## Zasady cross‑platform (obowiązkowe)
+
+- Nie hardkodować URL-i API — używać konfiguracji/środowiska.
+- Nie eksponować wewnętrznych ID — w API używaj UUID.
+- Błędy API w formacie RFC 7807 z polem `code` (UPPER_SNAKE_CASE).
+- Daty w API/DB w UTC (ISO 8601); lokalizacja po stronie klienta.
+- Backend zwraca kody błędów, nie przetłumaczone komunikaty — i18n po stronie klienta.
+- Hasła, tokeny, klucze — nigdy w logach, w odpowiedziach API ani w repo.
+
+## Nowi agenci
+
+Nowo utworzeni agenci powinni być kierowani do:
+- **Dokumentacja Android**: https://developer.android.com (Architecture, UI, Compose, Quality).
+- **Dobre praktyki**: `.factory/shared/platform-conventions.md` oraz `.factory/droids/android-dev.md` dla Androida.
