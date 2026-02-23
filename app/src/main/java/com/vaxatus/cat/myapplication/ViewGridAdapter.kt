@@ -22,7 +22,9 @@ class ViewGridAdapter(context: Context, var imageList: ArrayList<ImageItem>) : B
         val ctx = requireNotNull(context)
         val inflater = ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val itemBinding = ImgItemBinding.inflate(inflater, parent, false)
-        item.image?.let { itemBinding.itemImg.setImageDrawable(it) }
+        itemBinding.itemImg.setImageDrawable(
+            item.image ?: ctx.getDrawable(android.R.drawable.ic_menu_gallery)
+        )
         itemBinding.root.setOnClickListener { listener?.onClickItem(item.name) }
         return itemBinding.root
     }

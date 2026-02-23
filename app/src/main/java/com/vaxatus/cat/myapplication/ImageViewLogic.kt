@@ -1,1 +1,0 @@
-// Add null-checks for imageName, event and mask in the methods that use them.

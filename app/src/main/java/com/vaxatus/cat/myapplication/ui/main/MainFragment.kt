@@ -124,9 +124,8 @@ class MainFragment : Fragment(), OnItemBack, NavigationView.OnNavigationItemSele
     }
 
     private fun showGridPopup() {
-        val pop = GridPopup()
+        val pop = GridPopup().apply { setOnGridItemClick(this@MainFragment) }
         pop.show(parentFragmentManager, "nav_slideshow")
-        pop.setOnGridItemClick(this)
     }
 
     fun closeDrawer(): Boolean {

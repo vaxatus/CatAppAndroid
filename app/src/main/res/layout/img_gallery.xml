@@ -23,6 +23,7 @@
         android:id="@+id/catsGallery"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:minHeight="280dp"
         android:columnWidth="120dp"
         android:horizontalSpacing="12dp"
         android:verticalSpacing="12dp"
@@ -32,6 +33,7 @@
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="280dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/galleryTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
